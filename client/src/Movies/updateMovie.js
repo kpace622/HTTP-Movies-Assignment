@@ -38,7 +38,7 @@ const  UpdateMovie = props => {
         .then(res => {
             console.log(res)
             props.addToSavedList(res.data)
-            props.history.push('http://localhost:5000/movies')
+            props.history.push('/movies')
         })
         .catch(err => console.error(err))
     }
