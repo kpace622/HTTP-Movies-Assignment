@@ -5,20 +5,24 @@ const initialItem = {
     title: '',
     director: '',
     metascore: '',
-    stars: ''
+    stars: []
 }
 
 const  UpdateMovie = props => {
+    const { id } = props.match.params
     const [item, setItem] = useState(initialItem);
 
     useEffect(() => {
-        const selectedItem = props.savedList.find(item => {
-          return `${item.id}` === props.match.params.id;
-        });
-        if (selectedItem) {
-          setItem(selectedItem);
-        }
-      }, [props.savedList, props.match.params.id]);
+        axios
+          .get(`http://localhost:5000/api/movies/${id}`)
+          .then(response => {
+            console.log(response)
+            setItem(response.data)
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }, [item.id])
 
     const handleChange = e => {
         e.persist();
@@ -31,14 +35,21 @@ const  UpdateMovie = props => {
             [e.target.name]: value
         });
     };
+
+    const handleStars = event => {
+        setItem({
+          ...item,
+          stars: [event.target.value],
+        })
+      }
     
     const handleSubmit = e => {
         e.preventDefault();
-        axios.put(`http://localhost:5000/api/movies/${item.id}`, item)
+        axios.put(`http://localhost:5000/api/movies/${id}`, item)
         .then(res => {
             console.log(res)
-            props.addToSavedList(res.data)
-            props.history.push('/movies')
+            setItem(initialItem)
+            props.history.push('/')
         })
         .catch(err => console.error(err))
     }
@@ -69,7 +80,7 @@ const  UpdateMovie = props => {
             <input 
                 type='text'
                 name='stars'
-                onChange={handleChange}
+                onChange={handleStars}
                 placeholder='stars'
                 value={item.stars}
             />
