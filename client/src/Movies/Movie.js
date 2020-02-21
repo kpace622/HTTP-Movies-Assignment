@@ -35,7 +35,7 @@ export default class Movie extends React.Component {
     e.preventDefault();
     axios.delete(`http://localhost:5000/api/movies/${this.state.movie.id}`)
     .then(res => {this.props.addToSavedList(res.data);
-    this.props.history.push('/movies')
+    this.props.history.push('/')
   });
 }
 
